@@ -42,6 +42,18 @@ Once the camera app has started up, its serial monitor is no longer available, b
 
 Browser functions only tested on Chrome.
 
+## Quick start: ESP32-CAM for a 3D printer enclosure
+
+You can pair an ESP32-CAM running [ESP32-MJPEG2SD](https://github.com/s60sc/ESP32-CAM_MJPEG2SD/releases/tag/v9.9.4) with this IO Extender to monitor a 3D printer inside an enclosure while freeing pins for extras (e.g. enclosure light, PIR-based motion alert, or a temperature probe to watch PETG prints). A minimal first setup looks like this:
+
+1. **Flash the camera and IO Extender** with matching `peripherals.cpp` versions (see install steps above). Use the ESP32-CAM UART0 pins (RX0=3, TX0=1) to connect to the IO Extender UART1 if you want to keep pins 4/12/33 free for local peripherals.
+2. **Wire power and UART**: share GND between boards, connect `CAM TX0 (1) → Extender RX1`, `CAM RX0 (3) → Extender TX1`. Keep wires short inside the enclosure to reduce noise from stepper motors.
+3. **Join Wi‑Fi and configure**: after both boot in AP mode, enter your router credentials; then in the camera app **Peripherals** tab enable `Use another ESP as IO Extender`, set UART pins as above, and add 100 to any IO Extender pin numbers you assign.
+4. **Add enclosure helpers**: in the IO Extender **Edit Config → Peripherals** tab, enable a LED lamp (PWM or WS2812) for print visibility, optionally a PIR sensor for intrusion alerts, and a DS18B20 probe to watch chamber temperature when running long PETG jobs.
+5. **Test remotely**: from school or another network, reach the camera’s web UI through your router/ VPN; use the **Show Log** tab to confirm UART traffic and peripheral status, and adjust light/servo values live.
+
+This setup gives you live video plus controllable enclosure I/O without sacrificing the ESP32-CAM’s scarce pins.
+
 
 ## Configuration
 
